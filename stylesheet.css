@@ -1,0 +1,36 @@
+.scoreboard {
+  display: flex;
+}
+
+.game-score, .set-score {
+  background-color: black;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+}
+
+.game-score {
+  width: 120px;
+  height: 160px;
+  font-size: 80px;
+}
+
+.set-score {
+  width: 60px;
+  height: 100px;
+  font-size: 50px;
+}
+
+.game-score.left {
+  margin-right: 16px;
+}
+
+.game-score.right {
+  margin-left: 16px;
+}
+
+.set-score.left {
+  margin-right: 16px;
+}
