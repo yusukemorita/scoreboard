@@ -1,59 +1,70 @@
 import React, {useState} from 'react'
 import styled from 'styled-components'
 
+type Event = 'INCREMENT_POINT_A' | 'INCREMENT_POINT_B' | 'INCREMENT_GAME_A' | 'INCREMENT_GAME_B'
+
 export default function Scoreboard(): JSX.Element {
-  const [pointScoreA, setPointScoreA] = useState(0)
-  const [pointScoreB, setPointScoreB] = useState(0)
+  const [events, setEvents] = useState<Event[]>([])
 
-  const [gameScoreA, setGameScoreA] = useState(0)
-  const [gameScoreB, setGameScoreB] = useState(0)
+  const pointScoreA = events.filter(e => e === 'INCREMENT_POINT_A').length
+  const pointScoreB = events.filter(e => e === 'INCREMENT_POINT_B').length
 
-  const incrementPointScore1A = () => {
-    setPointScoreA(pointScoreA + 1)
+  const gameScoreA = events.filter(e => e === 'INCREMENT_GAME_A').length
+  const gameScoreB = events.filter(e => e === 'INCREMENT_GAME_B').length
+
+  function addEvent(event: Event) {
+    setEvents([...events, event])
   }
 
-  const incrementPointScoreB = () => {
-    setPointScoreB(pointScoreB + 1)
+  const incrementPointA = () => {
+    addEvent('INCREMENT_POINT_A')
   }
 
-  const incrementGameScoreA = () => {
-    setGameScoreA(gameScoreA + 1)
+  const incrementPointB = () => {
+    addEvent('INCREMENT_POINT_B')
   }
 
-  const incrementGameScoreB = () => {
-    setGameScoreB(gameScoreB + 1)
+  const incrementGameA = () => {
+    addEvent('INCREMENT_GAME_A')
+  }
+
+  const incrementGameB = () => {
+    addEvent('INCREMENT_GAME_B')
   }
 
   const resetScore = () => {
-    setPointScoreA(0)
-    setPointScoreB(0)
-    setGameScoreA(0)
-    setGameScoreB(0)
+    setEvents([])
+  }
+
+  const undo = () => {
+    const eventsWithMostRecentRemoved = events.slice(0, events.length - 1)
+    setEvents(eventsWithMostRecentRemoved)
   }
 
   return (
     <StyledScoreboard>
-      <StyledGameScore onClick={incrementPointScore1A}>
+      <StyledGameScore onClick={incrementPointA}>
         {pointScoreA}
       </StyledGameScore>
 
       <Middle>
         <SetScores>
-          <StyledSetScore onClick={incrementGameScoreA}>
+          <StyledSetScore onClick={incrementGameA}>
             {gameScoreA}
           </StyledSetScore>
 
           <Spacer />
 
-          <StyledSetScore onClick={incrementGameScoreB}>
+          <StyledSetScore onClick={incrementGameB}>
             {gameScoreB}
           </StyledSetScore>
         </SetScores>
 
         <ResetButton onClick={resetScore}>reset</ResetButton>
+        <UndoButton onClick={undo}>undo</UndoButton>
       </Middle>
 
-      <StyledGameScore onClick={incrementPointScoreB}>
+      <StyledGameScore onClick={incrementPointB}>
         {pointScoreB}
       </StyledGameScore>
     </StyledScoreboard>
@@ -113,4 +124,14 @@ const ResetButton = styled.button`
   background: gray;
   color: white;
   cursor: pointer;
+`
+
+const UndoButton = styled.button`
+  height: 20px;
+  border: none;
+  border-radius: 8px;
+  background: gray;
+  color: white;
+  cursor: pointer;
+  margin-top: 8px;
 `
