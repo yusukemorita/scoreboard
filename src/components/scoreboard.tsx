@@ -2,59 +2,59 @@ import React, {useState} from 'react'
 import styled from 'styled-components'
 
 export default function Scoreboard(): JSX.Element {
-  const [gameScore1, setGameScore1] = useState(0)
-  const [gameScore2, setGameScore2] = useState(0)
+  const [pointScoreA, setPointScoreA] = useState(0)
+  const [pointScoreB, setPointScoreB] = useState(0)
 
-  const [setScore1, setSetScore1] = useState(0)
-  const [setScore2, setSetScore2] = useState(0)
+  const [gameScoreA, setGameScoreA] = useState(0)
+  const [gameScoreB, setGameScoreB] = useState(0)
 
-  const incrementGameScore1 = () => {
-    setGameScore1(gameScore1 + 1)
+  const incrementPointScore1A = () => {
+    setPointScoreA(pointScoreA + 1)
   }
 
-  const incrementGameScore2 = () => {
-    setGameScore2(gameScore2 + 1)
+  const incrementPointScoreB = () => {
+    setPointScoreB(pointScoreB + 1)
   }
 
-  const incrementSetScore1 = () => {
-    setSetScore1(setScore1 + 1)
+  const incrementGameScoreA = () => {
+    setGameScoreA(gameScoreA + 1)
   }
 
-  const incrementSetScore2 = () => {
-    setSetScore2(setScore2 + 1)
+  const incrementGameScoreB = () => {
+    setGameScoreB(gameScoreB + 1)
   }
 
   const resetScore = () => {
-    setGameScore1(0)
-    setGameScore2(0)
-    setSetScore1(0)
-    setSetScore2(0)
+    setPointScoreA(0)
+    setPointScoreB(0)
+    setGameScoreA(0)
+    setGameScoreB(0)
   }
 
   return (
     <StyledScoreboard>
-      <StyledGameScore onClick={incrementGameScore1}>
-        {gameScore1}
+      <StyledGameScore onClick={incrementPointScore1A}>
+        {pointScoreA}
       </StyledGameScore>
 
       <Middle>
         <SetScores>
-          <StyledSetScore onClick={incrementSetScore1}>
-            {setScore1}
+          <StyledSetScore onClick={incrementGameScoreA}>
+            {gameScoreA}
           </StyledSetScore>
 
           <Spacer />
 
-          <StyledSetScore onClick={incrementSetScore2}>
-            {setScore2}
+          <StyledSetScore onClick={incrementGameScoreB}>
+            {gameScoreB}
           </StyledSetScore>
         </SetScores>
 
         <ResetButton onClick={resetScore}>reset</ResetButton>
       </Middle>
 
-      <StyledGameScore onClick={incrementGameScore2}>
-        {gameScore2}
+      <StyledGameScore onClick={incrementPointScoreB}>
+        {pointScoreB}
       </StyledGameScore>
     </StyledScoreboard>
   )
