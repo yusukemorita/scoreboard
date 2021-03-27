@@ -12,9 +12,13 @@ function App() {
   );
 }
 
-const Title = styled.h1`
+const Title = styled.div`
   width: 100%;
   text-align: center;
+  font-size: 8vw;
+  line-height: 7vw;
+  font-weight: bold;
+  margin-bottom: 1vw;
 `
 
 export default App;

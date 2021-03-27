@@ -100,9 +100,9 @@ export default function Scoreboard(): JSX.Element {
           </StyledSetScore>
         </SetScores>
 
-        <ResetButton onClick={resetScore}>reset</ResetButton>
-        <UndoButton onClick={undo}>undo</UndoButton>
-        <UndoButton onClick={changeCourt}>change court</UndoButton>
+        <Button onClick={resetScore}>reset</Button>
+        <Button onClick={undo}>undo</Button>
+        <Button onClick={changeCourt}>change court</Button>
       </Middle>
 
       <StyledGameScore onClick={incrementPointRight}>
@@ -112,8 +112,10 @@ export default function Scoreboard(): JSX.Element {
   )
 }
 
+const spacingUnit = 2 // vw
+
 const Spacer = styled.div`
-  width: 16px;
+  width: ${spacingUnit}vw;
 `
 
 const StyledScoreboard = styled.div`
@@ -132,47 +134,40 @@ const scoreCommonStyles = `
   user-select: none;
 `
 
+const sizeUnit = 30 // vw
+
 const StyledGameScore = styled.div`
-  width: 120px;
-  height: 160px;
-  font-size: 80px;
+  width: ${sizeUnit}vw;
+  height: ${sizeUnit * 3 / 2}vw;
+  font-size: ${sizeUnit * 3 / 4}vw;
   ${scoreCommonStyles}
 `
 
 const StyledSetScore = styled.div`
-  width: 60px;
-  height: 100px;
-  font-size: 50px;
+  width: ${sizeUnit / 2}vw;
+  height: ${sizeUnit * 2 / 3}vw;
+  font-size: ${sizeUnit * 3 / 8}vw;
   ${scoreCommonStyles}
 `
 
 const Middle = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: 16px;
-  margin-right: 16px;
+  margin-left: ${spacingUnit}vw;
+  margin-right: ${spacingUnit}vw;
 `
 
 const SetScores = styled.div`
   display: flex;
-  margin-bottom: 16px;
 `
 
-const ResetButton = styled.button`
-  height: 20px;
+const Button = styled.button`
+  height: 3vw;
+  font-size: 2vw;
   border: none;
   border-radius: 8px;
   background: gray;
   color: white;
   cursor: pointer;
-`
-
-const UndoButton = styled.button`
-  height: 20px;
-  border: none;
-  border-radius: 8px;
-  background: gray;
-  color: white;
-  cursor: pointer;
-  margin-top: 8px;
+  margin-top: ${spacingUnit}vw;
 `
