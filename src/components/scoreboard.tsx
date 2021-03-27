@@ -1,71 +1,112 @@
 import React, {useState} from 'react'
 import styled from 'styled-components'
 
+type Player = 'PLAYER_A' | 'PLAYER_B'
 type Event = 'INCREMENT_POINT_A' | 'INCREMENT_POINT_B' | 'INCREMENT_GAME_A' | 'INCREMENT_GAME_B'
 
 export default function Scoreboard(): JSX.Element {
   const [events, setEvents] = useState<Event[]>([])
-
-  const pointScoreA = events.filter(e => e === 'INCREMENT_POINT_A').length
-  const pointScoreB = events.filter(e => e === 'INCREMENT_POINT_B').length
-
-  const gameScoreA = events.filter(e => e === 'INCREMENT_GAME_A').length
-  const gameScoreB = events.filter(e => e === 'INCREMENT_GAME_B').length
+  const [playerOrder, setPlayers] = useState<Player[]>(['PLAYER_A', 'PLAYER_B'])
 
   function addEvent(event: Event) {
     setEvents([...events, event])
   }
 
-  const incrementPointA = () => {
-    addEvent('INCREMENT_POINT_A')
+  function pointScore(player: Player) {
+    switch(player) {
+      case 'PLAYER_A':
+        return events.filter(e => e === 'INCREMENT_POINT_A').length
+      case 'PLAYER_B':
+        return events.filter(e => e === 'INCREMENT_POINT_B').length
+    }
   }
 
-  const incrementPointB = () => {
-    addEvent('INCREMENT_POINT_B')
+  function gameScore(player: Player) {
+    switch(player) {
+      case 'PLAYER_A':
+        return events.filter(e => e === 'INCREMENT_GAME_A').length
+      case 'PLAYER_B':
+        return events.filter(e => e === 'INCREMENT_GAME_B').length
+    }
   }
 
-  const incrementGameA = () => {
-    addEvent('INCREMENT_GAME_A')
+  function incrementPoint(player: Player) {
+    switch(player) {
+      case 'PLAYER_A':
+        addEvent('INCREMENT_POINT_A')
+        break;
+      case 'PLAYER_B':
+        addEvent('INCREMENT_POINT_B')
+    }
   }
 
-  const incrementGameB = () => {
-    addEvent('INCREMENT_GAME_B')
+  function incrementGame(player: Player) {
+    switch(player) {
+      case 'PLAYER_A':
+        addEvent('INCREMENT_GAME_A')
+        break;
+      case 'PLAYER_B':
+        addEvent('INCREMENT_GAME_B')
+    }
   }
 
-  const resetScore = () => {
+
+  function incrementPointLeft() {
+    incrementPoint(playerOrder[0])
+  }
+
+  function incrementPointRight() {
+    incrementPoint(playerOrder[1])
+  }
+
+  function incrementGameLeft() {
+    incrementGame(playerOrder[0])
+  }
+
+  function incrementGameRight() {
+    incrementGame(playerOrder[1])
+  }
+
+  function resetScore() {
     setEvents([])
   }
 
-  const undo = () => {
+  function undo() {
+    if (events.length === 0) return
     const eventsWithMostRecentRemoved = events.slice(0, events.length - 1)
     setEvents(eventsWithMostRecentRemoved)
   }
 
+  function changeCourt() {
+    setPlayers([playerOrder[1], playerOrder[0]])
+  }
+
   return (
     <StyledScoreboard>
-      <StyledGameScore onClick={incrementPointA}>
-        {pointScoreA}
+      <StyledGameScore onClick={incrementPointLeft}>
+        {pointScore(playerOrder[0])}
       </StyledGameScore>
 
       <Middle>
         <SetScores>
-          <StyledSetScore onClick={incrementGameA}>
-            {gameScoreA}
+          <StyledSetScore onClick={incrementGameLeft}>
+            {gameScore(playerOrder[0])}
           </StyledSetScore>
 
           <Spacer />
 
-          <StyledSetScore onClick={incrementGameB}>
-            {gameScoreB}
+          <StyledSetScore onClick={incrementGameRight}>
+            {gameScore(playerOrder[1])}
           </StyledSetScore>
         </SetScores>
 
         <ResetButton onClick={resetScore}>reset</ResetButton>
         <UndoButton onClick={undo}>undo</UndoButton>
+        <UndoButton onClick={changeCourt}>change court</UndoButton>
       </Middle>
 
-      <StyledGameScore onClick={incrementPointB}>
-        {pointScoreB}
+      <StyledGameScore onClick={incrementPointRight}>
+        {pointScore(playerOrder[1])}
       </StyledGameScore>
     </StyledScoreboard>
   )
