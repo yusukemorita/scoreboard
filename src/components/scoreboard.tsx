@@ -165,7 +165,7 @@ const SetScores = styled.div`
 `
 
 const Button = styled.button`
-  height: 30px;
+  height: 4vmin;
   font-size: 3vmin;
   border: none;
   border-radius: 8px;
