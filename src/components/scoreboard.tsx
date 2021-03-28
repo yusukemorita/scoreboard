@@ -83,21 +83,21 @@ export default function Scoreboard(): JSX.Element {
 
   return (
     <StyledScoreboard>
-      <StyledGameScore onClick={incrementPointLeft}>
+      <StyledPointScore onClick={incrementPointLeft}>
         {pointScore(playerOrder[0])}
-      </StyledGameScore>
+      </StyledPointScore>
 
       <Middle>
         <SetScores>
-          <StyledSetScore onClick={incrementGameLeft}>
+          <StyledGameScore onClick={incrementGameLeft}>
             {gameScore(playerOrder[0])}
-          </StyledSetScore>
+          </StyledGameScore>
 
           <Spacer />
 
-          <StyledSetScore onClick={incrementGameRight}>
+          <StyledGameScore onClick={incrementGameRight}>
             {gameScore(playerOrder[1])}
-          </StyledSetScore>
+          </StyledGameScore>
         </SetScores>
 
         <Button onClick={resetScore}>reset</Button>
@@ -105,22 +105,21 @@ export default function Scoreboard(): JSX.Element {
         <Button onClick={changeCourt}>change court</Button>
       </Middle>
 
-      <StyledGameScore onClick={incrementPointRight}>
+      <StyledPointScore onClick={incrementPointRight}>
         {pointScore(playerOrder[1])}
-      </StyledGameScore>
+      </StyledPointScore>
     </StyledScoreboard>
   )
 }
 
-const spacingUnit = 2 // vw
-
 const Spacer = styled.div`
-  width: ${spacingUnit}vw;
+  width: 8%;
 `
 
 const StyledScoreboard = styled.div`
   display: flex;
   justify-content: center;
+  height: 80%;
 `
 
 const scoreCommonStyles = `
@@ -134,40 +133,44 @@ const scoreCommonStyles = `
   user-select: none;
 `
 
-const sizeUnit = 30 // vw
+const fontSize = 36 // vmin
 
-const StyledGameScore = styled.div`
-  width: ${sizeUnit}vw;
-  height: ${sizeUnit * 3 / 2}vw;
-  font-size: ${sizeUnit * 3 / 4}vw;
+const StyledPointScore = styled.div`
+  width: 30%;
+  height: 100%;
+  font-size: ${fontSize}vmin;
   ${scoreCommonStyles}
 `
 
-const StyledSetScore = styled.div`
-  width: ${sizeUnit / 2}vw;
-  height: ${sizeUnit * 2 / 3}vw;
-  font-size: ${sizeUnit * 3 / 8}vw;
+const StyledGameScore = styled.div`
+  width: 50%;
+  height: 100%;
+  font-size: ${fontSize / 2}vmin;
   ${scoreCommonStyles}
 `
 
 const Middle = styled.div`
+  width: 30%;
+  padding-left: 2%;
+  padding-right: 2%;
   display: flex;
   flex-direction: column;
-  margin-left: ${spacingUnit}vw;
-  margin-right: ${spacingUnit}vw;
+  margin-left: 0;
+  margin-right: 0;
 `
 
 const SetScores = styled.div`
   display: flex;
+  height: 50%;
 `
 
 const Button = styled.button`
-  height: 3vw;
-  font-size: 2vw;
+  height: 30px;
+  font-size: 3vmin;
   border: none;
   border-radius: 8px;
   background: gray;
   color: white;
   cursor: pointer;
-  margin-top: ${spacingUnit}vw;
+  margin-top: 5%;
 `
