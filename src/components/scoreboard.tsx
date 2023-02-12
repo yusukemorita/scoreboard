@@ -88,31 +88,25 @@ const StyledScoreboard = styled.div`
   height: 80%;
 `
 
-const scoreCommonStyles = `
-  background-color: black;
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 8px;
-  cursor: pointer;
-  user-select: none;
-`
-
-const fontSize = 36 // vmin
-
 const StyledPointScore = styled.div`
   width: 30%;
   height: 100%;
-  font-size: ${fontSize}vmin;
-  ${scoreCommonStyles}
+  font-size: 36vmin;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
 `
 
 const StyledGameScore = styled.div`
   width: 50%;
   height: 100%;
-  font-size: ${fontSize / 2}vmin;
-  ${scoreCommonStyles}
+  font-size: 18vmin;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
 `
 
 const Middle = styled.div`
@@ -140,9 +134,9 @@ const Button = styled.button`
   width: 46%;
   height: 10vw;
   font-size: 3vmin;
-  border: none;
+  border: 1px solid white;
   border-radius: 8px;
-  background: gray;
+  background: black;
   color: white;
   cursor: pointer;
   margin-top: 5%;
