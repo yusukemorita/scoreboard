@@ -91,7 +91,7 @@ const StyledScoreboard = styled.div`
 const StyledPointScore = styled.div`
   width: 30%;
   height: 100%;
-  font-size: 70vmin;
+  font-size: 42vw;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -102,7 +102,7 @@ const StyledPointScore = styled.div`
 const StyledGameScore = styled.div`
   width: 50%;
   height: 100%;
-  font-size: 40vmin;
+  font-size: 20vw;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -133,7 +133,7 @@ const ButtonContainer = styled.div`
 const Button = styled.button`
   width: 46%;
   height: 10vw;
-  font-size: 8vmin;
+  font-size: 3vw;
   border: 1px solid white;
   border-radius: 8px;
   background: black;
