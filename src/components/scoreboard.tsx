@@ -91,12 +91,13 @@ const StyledScoreboard = styled.div`
 const StyledPointScore = styled.div`
   width: 30%;
   height: 100%;
-  font-size: 42vw;
+  font-size: 36vw;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   user-select: none;
+  letter-spacing: -4vw;
 `
 
 const StyledGameScore = styled.div`
