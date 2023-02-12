@@ -1,112 +1,78 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import styled from 'styled-components'
+import {Game, gameScore, isGameOver, winner} from './game'
 
-type Player = 'PLAYER_A' | 'PLAYER_B'
-type Event = 'INCREMENT_POINT_A' | 'INCREMENT_POINT_B' | 'INCREMENT_GAME_A' | 'INCREMENT_GAME_B'
+export type Player = 'PLAYER_A' | 'PLAYER_B'
+
+type FinishedGame = {
+  game: Game,
+  winner: Player,
+}
 
 export default function Scoreboard(): JSX.Element {
-  const [events, setEvents] = useState<Event[]>([])
+  const [pastGames, setPastGames] = useState<FinishedGame[]>([])
+  const [currentGame, setCurrentGame] = useState<Game>({events: []})
   const [playerOrder, setPlayers] = useState<Player[]>(['PLAYER_A', 'PLAYER_B'])
 
-  function addEvent(event: Event) {
-    setEvents([...events, event])
-  }
-
-  function pointScore(player: Player) {
-    switch(player) {
-      case 'PLAYER_A':
-        return events.filter(e => e === 'INCREMENT_POINT_A').length
-      case 'PLAYER_B':
-        return events.filter(e => e === 'INCREMENT_POINT_B').length
+  useEffect(() => {
+    // run after the point increment has been rendered
+    if (isGameOver(currentGame)) {
+      if (window.confirm('the game is over! Do you want to start the next game?')) {
+        setPastGames([...pastGames, {game: currentGame, winner: winner(currentGame)}])
+        setCurrentGame({events: []})
+      }
     }
-  }
+  }, [currentGame, setPastGames, pastGames])
 
-  function gameScore(player: Player) {
-    switch(player) {
-      case 'PLAYER_A':
-        return events.filter(e => e === 'INCREMENT_GAME_A').length
-      case 'PLAYER_B':
-        return events.filter(e => e === 'INCREMENT_GAME_B').length
-    }
-  }
-
-  function incrementPoint(player: Player) {
-    switch(player) {
-      case 'PLAYER_A':
-        addEvent('INCREMENT_POINT_A')
-        break;
-      case 'PLAYER_B':
-        addEvent('INCREMENT_POINT_B')
-    }
-  }
-
-  function incrementGame(player: Player) {
-    switch(player) {
-      case 'PLAYER_A':
-        addEvent('INCREMENT_GAME_A')
-        break;
-      case 'PLAYER_B':
-        addEvent('INCREMENT_GAME_B')
-    }
-  }
-
-
-  function incrementPointLeft() {
-    incrementPoint(playerOrder[0])
-  }
-
-  function incrementPointRight() {
-    incrementPoint(playerOrder[1])
-  }
-
-  function incrementGameLeft() {
-    incrementGame(playerOrder[0])
-  }
-
-  function incrementGameRight() {
-    incrementGame(playerOrder[1])
-  }
-
-  function resetScore() {
-    setEvents([])
+  function matchScore(player: Player) {
+    return pastGames.filter(game => game.winner === player).length
   }
 
   function undo() {
-    if (events.length === 0) return
-    const eventsWithMostRecentRemoved = events.slice(0, events.length - 1)
-    setEvents(eventsWithMostRecentRemoved)
+    if (currentGame.events.length === 0) return
+    setCurrentGame({events: currentGame.events.slice(0, currentGame.events.length - 1)})
   }
 
   function changeCourt() {
     setPlayers([playerOrder[1], playerOrder[0]])
   }
 
+  function incrementPoint(currentGame: Game, player: Player) {
+    const game = {events: [...currentGame.events, {player}]}
+    setCurrentGame(game)
+  }
+
+  function reset() {
+    if (window.confirm('Are you sure you want to clear all game and match data?')) {
+      setPastGames([])
+      setCurrentGame({events: []})
+    }
+  }
+
   return (
     <StyledScoreboard>
-      <StyledPointScore onClick={incrementPointLeft}>
-        {pointScore(playerOrder[0])}
+      <StyledPointScore onClick={() => incrementPoint(currentGame, playerOrder[0])}>
+        {gameScore(currentGame, playerOrder[0])}
       </StyledPointScore>
 
       <Middle>
         <SetScores>
-          <StyledGameScore onClick={incrementGameLeft}>
-            {gameScore(playerOrder[0])}
-          </StyledGameScore>
+          <StyledGameScore>{matchScore(playerOrder[0])}</StyledGameScore>
 
           <Spacer />
 
-          <StyledGameScore onClick={incrementGameRight}>
-            {gameScore(playerOrder[1])}
-          </StyledGameScore>
+          <StyledGameScore>{matchScore(playerOrder[1])}</StyledGameScore>
         </SetScores>
 
-        <Button onClick={resetScore}>reset</Button>
-        <Button onClick={undo}>undo</Button>
-        <Button onClick={changeCourt}>change court</Button>
+        <ButtonContainer>
+          <Button onClick={undo}>undo</Button>
+          <Button onClick={changeCourt}>change court</Button>
+          <Button onClick={reset}>reset</Button>
+        </ButtonContainer>
       </Middle>
 
-      <StyledPointScore onClick={incrementPointRight}>
-        {pointScore(playerOrder[1])}
+      <StyledPointScore onClick={() => incrementPoint(currentGame, playerOrder[1])}>
+        {gameScore(currentGame, playerOrder[1])}
       </StyledPointScore>
     </StyledScoreboard>
   )
@@ -122,31 +88,25 @@ const StyledScoreboard = styled.div`
   height: 80%;
 `
 
-const scoreCommonStyles = `
-  background-color: black;
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 8px;
-  cursor: pointer;
-  user-select: none;
-`
-
-const fontSize = 36 // vmin
-
 const StyledPointScore = styled.div`
   width: 30%;
   height: 100%;
-  font-size: ${fontSize}vmin;
-  ${scoreCommonStyles}
+  font-size: 36vmin;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
 `
 
 const StyledGameScore = styled.div`
   width: 50%;
   height: 100%;
-  font-size: ${fontSize / 2}vmin;
-  ${scoreCommonStyles}
+  font-size: 18vmin;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
 `
 
 const Middle = styled.div`
@@ -164,12 +124,19 @@ const SetScores = styled.div`
   height: 50%;
 `
 
+const ButtonContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+`
+
 const Button = styled.button`
-  height: 4vmin;
+  width: 46%;
+  height: 10vw;
   font-size: 3vmin;
-  border: none;
+  border: 1px solid white;
   border-radius: 8px;
-  background: gray;
+  background: black;
   color: white;
   cursor: pointer;
   margin-top: 5%;

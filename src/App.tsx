@@ -6,7 +6,7 @@ function App() {
   return (
     <div className="App">
       <Container>
-        <Title>Scoreboard</Title>
+        <Title>Table Tennis Scoreboard</Title>
         <Scoreboard />
       </Container>
     </div>
@@ -19,11 +19,11 @@ const ratio = 16 / 9
 const Container = styled.div`
   width: 100vw;
   height: ${100 / ratio}vw;
-  // background: pink; /* useful for css debugging */
   max-height: 100vh;
   max-width: ${100 * ratio}vh;
   margin: auto;
   position: absolute;
+  color: white;
 
   /* vertical center */
   top: 0;
@@ -37,7 +37,7 @@ const Container = styled.div`
 const Title = styled.div`
   width: 100%;
   text-align: center;
-  font-size: 10vmin;
+  font-size: 6vmin;
   font-weight: bold;
 `
 
