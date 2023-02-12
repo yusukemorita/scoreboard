@@ -1,10 +1,12 @@
 import React, {useState} from 'react'
 import styled from 'styled-components'
+import {Game, gameScore, isGameOver} from './game'
 
-type Player = 'PLAYER_A' | 'PLAYER_B'
-type Event = 'INCREMENT_POINT_A' | 'INCREMENT_POINT_B' | 'INCREMENT_GAME_A' | 'INCREMENT_GAME_B'
+export type Player = 'PLAYER_A' | 'PLAYER_B'
+type Event = 'INCREMENT_GAME_A' | 'INCREMENT_GAME_B'
 
 export default function Scoreboard(): JSX.Element {
+  const [currentGame, setCurrentGame] = useState<Game>({events: []})
   const [events, setEvents] = useState<Event[]>([])
   const [playerOrder, setPlayers] = useState<Player[]>(['PLAYER_A', 'PLAYER_B'])
 
@@ -12,31 +14,12 @@ export default function Scoreboard(): JSX.Element {
     setEvents([...events, event])
   }
 
-  function pointScore(player: Player) {
-    switch(player) {
-      case 'PLAYER_A':
-        return events.filter(e => e === 'INCREMENT_POINT_A').length
-      case 'PLAYER_B':
-        return events.filter(e => e === 'INCREMENT_POINT_B').length
-    }
-  }
-
-  function gameScore(player: Player) {
+  function matchScore(player: Player) {
     switch(player) {
       case 'PLAYER_A':
         return events.filter(e => e === 'INCREMENT_GAME_A').length
       case 'PLAYER_B':
         return events.filter(e => e === 'INCREMENT_GAME_B').length
-    }
-  }
-
-  function incrementPoint(player: Player) {
-    switch(player) {
-      case 'PLAYER_A':
-        addEvent('INCREMENT_POINT_A')
-        break;
-      case 'PLAYER_B':
-        addEvent('INCREMENT_POINT_B')
     }
   }
 
@@ -48,15 +31,6 @@ export default function Scoreboard(): JSX.Element {
       case 'PLAYER_B':
         addEvent('INCREMENT_GAME_B')
     }
-  }
-
-
-  function incrementPointLeft() {
-    incrementPoint(playerOrder[0])
-  }
-
-  function incrementPointRight() {
-    incrementPoint(playerOrder[1])
   }
 
   function incrementGameLeft() {
@@ -72,31 +46,34 @@ export default function Scoreboard(): JSX.Element {
   }
 
   function undo() {
-    if (events.length === 0) return
-    const eventsWithMostRecentRemoved = events.slice(0, events.length - 1)
-    setEvents(eventsWithMostRecentRemoved)
+    if (currentGame.events.length === 0) return
+    setCurrentGame({events: currentGame.events.slice(0, currentGame.events.length - 1)})
   }
 
   function changeCourt() {
     setPlayers([playerOrder[1], playerOrder[0]])
   }
 
+  function incrementPoint(currentGame: Game, player: Player) {
+    setCurrentGame({events: [...currentGame.events, {player}]})
+  }
+
   return (
     <StyledScoreboard>
-      <StyledPointScore onClick={incrementPointLeft}>
-        {pointScore(playerOrder[0])}
+      <StyledPointScore onClick={() => incrementPoint(currentGame, playerOrder[0])}>
+        {gameScore(currentGame, playerOrder[0])}
       </StyledPointScore>
 
       <Middle>
         <SetScores>
           <StyledGameScore onClick={incrementGameLeft}>
-            {gameScore(playerOrder[0])}
+            {matchScore(playerOrder[0])}
           </StyledGameScore>
 
           <Spacer />
 
           <StyledGameScore onClick={incrementGameRight}>
-            {gameScore(playerOrder[1])}
+            {matchScore(playerOrder[1])}
           </StyledGameScore>
         </SetScores>
 
@@ -107,8 +84,8 @@ export default function Scoreboard(): JSX.Element {
         </ButtonContainer>
       </Middle>
 
-      <StyledPointScore onClick={incrementPointRight}>
-        {pointScore(playerOrder[1])}
+      <StyledPointScore onClick={() => incrementPoint(currentGame, playerOrder[1])}>
+        {gameScore(currentGame, playerOrder[1])}
       </StyledPointScore>
     </StyledScoreboard>
   )
