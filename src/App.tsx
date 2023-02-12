@@ -20,7 +20,6 @@ const Container = styled.div`
   width: 100vw;
   height: ${100 / ratio}vw;
   max-height: 100vh;
-  max-width: ${100 * ratio}vh;
   margin: auto;
   position: absolute;
   color: white;
@@ -38,7 +37,6 @@ const Title = styled.div`
   width: 100%;
   text-align: center;
   font-size: 6vmin;
-  font-weight: bold;
 `
 
 export default App;
