@@ -100,9 +100,11 @@ export default function Scoreboard(): JSX.Element {
           </StyledGameScore>
         </SetScores>
 
-        <Button onClick={resetScore}>reset</Button>
-        <Button onClick={undo}>undo</Button>
-        <Button onClick={changeCourt}>change court</Button>
+        <ButtonContainer>
+          <Button onClick={undo}>undo</Button>
+          <Button onClick={changeCourt}>change court</Button>
+          <Button onClick={resetScore}>reset</Button>
+        </ButtonContainer>
       </Middle>
 
       <StyledPointScore onClick={incrementPointRight}>
@@ -164,8 +166,15 @@ const SetScores = styled.div`
   height: 50%;
 `
 
+const ButtonContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+`
+
 const Button = styled.button`
-  height: 4vmin;
+  width: 46%;
+  height: 10vw;
   font-size: 3vmin;
   border: none;
   border-radius: 8px;
