@@ -24,3 +24,14 @@ export function isGameOver(game: Game): boolean {
     return scoreA >= 11 || scoreB >= 11
   }
 }
+
+export function winner(game: Game): Player {
+  const scoreA = gameScore(game, 'PLAYER_A')
+  const scoreB = gameScore(game, 'PLAYER_B')
+
+  if (scoreA > scoreB) {
+    return 'PLAYER_A'
+  } else {
+    return 'PLAYER_B'
+  }
+}

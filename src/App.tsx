@@ -6,7 +6,7 @@ function App() {
   return (
     <div className="App">
       <Container>
-        <Title>Scoreboard</Title>
+        <Title>Table Tennis Scoreboard</Title>
         <Scoreboard />
       </Container>
     </div>
@@ -37,7 +37,7 @@ const Container = styled.div`
 const Title = styled.div`
   width: 100%;
   text-align: center;
-  font-size: 10vmin;
+  font-size: 6vmin;
   font-weight: bold;
 `
 

@@ -1,4 +1,4 @@
-import {Game, IncrementPointEvent, gameScore, isGameOver} from './game'
+import {Game, IncrementPointEvent, gameScore, isGameOver, winner} from './game'
 
 test('gameScore: returns correct value for each player', () => {
   const events: IncrementPointEvent[] = [
@@ -56,4 +56,18 @@ test('isGameOver: returns false when deuce (10 vs 11)', () => {
   game.events.push({player: 'PLAYER_B'})
 
   expect(isGameOver(game)).toBe(true)
+})
+
+test('winner: returns player with higher score', () => {
+  const game: Game = {events: []}
+
+  for (let i = 1; i <= 9; i++) {
+    game.events.push({player: 'PLAYER_A'})
+  }
+
+  for (let i = 1; i <= 11; i++) {
+    game.events.push({player: 'PLAYER_B'})
+  }
+
+  expect(winner(game)).toBe('PLAYER_B')
 })

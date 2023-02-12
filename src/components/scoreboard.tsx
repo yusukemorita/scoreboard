@@ -1,48 +1,31 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import styled from 'styled-components'
-import {Game, gameScore, isGameOver} from './game'
+import {Game, gameScore, isGameOver, winner} from './game'
 
 export type Player = 'PLAYER_A' | 'PLAYER_B'
-type Event = 'INCREMENT_GAME_A' | 'INCREMENT_GAME_B'
+
+type FinishedGame = {
+  game: Game,
+  winner: Player,
+}
 
 export default function Scoreboard(): JSX.Element {
+  const [pastGames, setPastGames] = useState<FinishedGame[]>([])
   const [currentGame, setCurrentGame] = useState<Game>({events: []})
-  const [events, setEvents] = useState<Event[]>([])
   const [playerOrder, setPlayers] = useState<Player[]>(['PLAYER_A', 'PLAYER_B'])
 
-  function addEvent(event: Event) {
-    setEvents([...events, event])
-  }
+  useEffect(() => {
+    // run after the point increment has been rendered
+    if (isGameOver(currentGame)) {
+      if (window.confirm('the game is over! Do you want to start the next game?')) {
+        setPastGames([...pastGames, {game: currentGame, winner: winner(currentGame)}])
+        setCurrentGame({events: []})
+      }
+    }
+  }, [currentGame, setPastGames, pastGames])
 
   function matchScore(player: Player) {
-    switch(player) {
-      case 'PLAYER_A':
-        return events.filter(e => e === 'INCREMENT_GAME_A').length
-      case 'PLAYER_B':
-        return events.filter(e => e === 'INCREMENT_GAME_B').length
-    }
-  }
-
-  function incrementGame(player: Player) {
-    switch(player) {
-      case 'PLAYER_A':
-        addEvent('INCREMENT_GAME_A')
-        break;
-      case 'PLAYER_B':
-        addEvent('INCREMENT_GAME_B')
-    }
-  }
-
-  function incrementGameLeft() {
-    incrementGame(playerOrder[0])
-  }
-
-  function incrementGameRight() {
-    incrementGame(playerOrder[1])
-  }
-
-  function resetScore() {
-    setEvents([])
+    return pastGames.filter(game => game.winner === player).length
   }
 
   function undo() {
@@ -55,7 +38,15 @@ export default function Scoreboard(): JSX.Element {
   }
 
   function incrementPoint(currentGame: Game, player: Player) {
-    setCurrentGame({events: [...currentGame.events, {player}]})
+    const game = {events: [...currentGame.events, {player}]}
+    setCurrentGame(game)
+  }
+
+  function reset() {
+    if (window.confirm('Are you sure you want to clear all game and match data?')) {
+      setPastGames([])
+      setCurrentGame({events: []})
+    }
   }
 
   return (
@@ -66,21 +57,17 @@ export default function Scoreboard(): JSX.Element {
 
       <Middle>
         <SetScores>
-          <StyledGameScore onClick={incrementGameLeft}>
-            {matchScore(playerOrder[0])}
-          </StyledGameScore>
+          <StyledGameScore>{matchScore(playerOrder[0])}</StyledGameScore>
 
           <Spacer />
 
-          <StyledGameScore onClick={incrementGameRight}>
-            {matchScore(playerOrder[1])}
-          </StyledGameScore>
+          <StyledGameScore>{matchScore(playerOrder[1])}</StyledGameScore>
         </SetScores>
 
         <ButtonContainer>
           <Button onClick={undo}>undo</Button>
           <Button onClick={changeCourt}>change court</Button>
-          <Button onClick={resetScore}>reset</Button>
+          <Button onClick={reset}>reset</Button>
         </ButtonContainer>
       </Middle>
 
